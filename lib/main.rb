@@ -4,6 +4,7 @@ class Node
     @value = value
     @left = nil
     @right = nil
+    @waiting_list = []
   end
 end
 
@@ -38,6 +39,16 @@ class Tree
   end
   def delete(value)
     @root = delete_node(@root, value)
+  end
+  def level_order
+    return if @root.nil?
+    queue = [@root]
+    until queue.empty?
+      current_node = queue.shift
+      yield current_node if block_given?
+      queue << current_node.left if current_node.left
+      queue << current_node.right if current_node.right
+    end
   end
   private
   def delete_node(root, value)
@@ -83,9 +94,6 @@ end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 great_eternal_tree = Tree.new(array)
-puts great_eternal_tree.root.value
-great_eternal_tree.insert(12)
-great_eternal_tree.pretty_print
-great_eternal_tree.delete(67)
-great_eternal_tree.pretty_print
+
+great_eternal_tree.level_order { |node| puts node.value }
   
