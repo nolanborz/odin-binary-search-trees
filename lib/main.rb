@@ -16,6 +16,31 @@ class Tree
     @root = build_tree(array)
   end
 
+  def inorder(node = @root, &block)
+    return if node.nil?
+    inorder(node.left, &block)
+    yield node.value if block_given?
+    inorder(node.right, &block)
+  end
+
+  def preorder(node = @root, &block)
+    return if node.nil?
+    yield node.value if block_given?
+    preorder(node.left, &block)
+    preorder(node.right, &block)
+  end
+
+  def postorder(node = @root, &block)
+    return if node.nil?
+    postorder(node.right, &block)
+    postorder(node.left, &block)
+    yield node.value if block_given?
+  end
+  
+  def height(node)
+    
+  end
+
   def build_tree(arr, start = 0, last = @arr.length - 1)
     sorted_arr = arr.sort.uniq
     if start > last
@@ -103,7 +128,6 @@ class Tree
     end
     node
   end
-
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
@@ -111,4 +135,6 @@ great_eternal_tree = Tree.new(array)
 
 #great_eternal_tree.level_order { |node| puts node.value }
 puts great_eternal_tree.find(3)
-  
+#great_eternal_tree.inorder { |value| puts "#{value} " }
+great_eternal_tree.postorder { |value| puts "#{value} " }
+
