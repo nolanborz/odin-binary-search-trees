@@ -36,9 +36,14 @@ class Tree
     postorder(node.left, &block)
     yield node.value if block_given?
   end
-  
-  def height(node)
+  #working on this
+  def height(node = @root)
+    return -1 if node.nil?
     
+    left_height = height(node.left)
+    right_height = height(node.right)
+    
+    1 + [left_height, right_height].max
   end
 
   def build_tree(arr, start = 0, last = @arr.length - 1)
@@ -136,5 +141,7 @@ great_eternal_tree = Tree.new(array)
 #great_eternal_tree.level_order { |node| puts node.value }
 puts great_eternal_tree.find(3)
 #great_eternal_tree.inorder { |value| puts "#{value} " }
-great_eternal_tree.postorder { |value| puts "#{value} " }
+#great_eternal_tree.postorder { |value| puts "#{value} " }
+great_eternal_tree.pretty_print
+great_eternal_tree.height(3)
 
