@@ -15,6 +15,30 @@ class Tree
     @arr = array
     @root = build_tree(array)
   end
+  
+  def depth(node)
+    return nil if find(node).nil?
+    current_node = @root
+    count = 0
+    until current_node.value == node
+      if node < current_node.value
+        current_node = current_node.left
+        count += 1
+      elsif node > current_node.value
+        current_node = current_node.right
+        count += 1
+      else
+        return nil
+      end
+    end
+    count
+  end
+
+  def reorder
+    values = []
+    inorder { |value| values << value if !value.nil? }
+    @root = build_tree(values)
+  end
 
   def inorder(node = @root, &block)
     return if node.nil?
@@ -36,8 +60,8 @@ class Tree
     postorder(node.left, &block)
     yield node.value if block_given?
   end
-  #working on this
-  def height(node = @root)
+  def height(node_or_value = @root)
+    node = node_or_value.is_a?(Integer) ? find(node_or_value) : node_or_value
     return -1 if node.nil?
     
     left_height = height(node.left)
@@ -55,7 +79,7 @@ class Tree
     node = Node.new(sorted_arr[mid])
     node.left = build_tree(sorted_arr, start, mid - 1)
     node.right = build_tree(sorted_arr, mid + 1, last)
-    return node
+    node
   end
 
   def find(value)
@@ -139,9 +163,12 @@ array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 great_eternal_tree = Tree.new(array)
 
 #great_eternal_tree.level_order { |node| puts node.value }
-puts great_eternal_tree.find(3)
-#great_eternal_tree.inorder { |value| puts "#{value} " }
+#puts great_eternal_tree.find(3)
+new_arr = []
+#great_eternal_tree.inorder { |value| new_arr << value }
+#greater_forever_tree = Tree.new(array)
+great_eternal_tree.reorder
 #great_eternal_tree.postorder { |value| puts "#{value} " }
 great_eternal_tree.pretty_print
-great_eternal_tree.height(3)
+#puts great_eternal_tree.depth(67)
 
