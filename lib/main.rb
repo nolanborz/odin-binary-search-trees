@@ -60,6 +60,7 @@ class Tree
     postorder(node.left, &block)
     yield node.value if block_given?
   end
+
   def height(node_or_value = @root)
     node = node_or_value.is_a?(Integer) ? find(node_or_value) : node_or_value
     return -1 if node.nil?
@@ -118,7 +119,28 @@ class Tree
       queue << current_node.right if current_node.right
     end
   end
+  def balanced?
+    is_balanced?(@root)[0]
+  end
+
   private
+
+  def is_balanced?(node)
+    return [true, -1] if node.nil?
+    
+    left_result = is_balanced?(node.left)
+    return [false, 0] unless left_result[0]
+    
+    right_result = is_balanced?(node.right)
+    return [false, 0] unless right_result[0]
+    
+    is_balanced = (left_result[1] - right_result[1]).abs <= 1
+    height = 1 + [left_result[1], right_result[1]].max
+    
+    [is_balanced, height]
+  end
+
+
   def delete_node(root, value)
     return root.value if root.nil?
     
@@ -160,15 +182,24 @@ class Tree
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-great_eternal_tree = Tree.new(array)
 
-#great_eternal_tree.level_order { |node| puts node.value }
-#puts great_eternal_tree.find(3)
+great_eternal_tree = Tree.new((Array.new(15) { rand(1..100) }))
+great_eternal_tree = Tree.new(array)
+#puts great_eternal_tree.balanced?
 new_arr = []
+#puts great_eternal_tree.level_order { |node| puts node.value }
+#great_eternal_tree.preorder { |value| new_arr << value }
+#great_eternal_tree.postorder { |value| new_arr << value }
 #great_eternal_tree.inorder { |value| new_arr << value }
+
+
+#puts great_eternal_tree.find(3)
 #greater_forever_tree = Tree.new(array)
-great_eternal_tree.reorder
+great_eternal_tree.insert(103)
+
+#great_eternal_tree.reorder
+#puts great_eternal_tree.balanced?
 #great_eternal_tree.postorder { |value| puts "#{value} " }
-great_eternal_tree.pretty_print
 #puts great_eternal_tree.depth(67)
+great_eternal_tree.pretty_print
 
